@@ -4,19 +4,39 @@
     <meta charset="UTF-8">
     <title>library management system</title>
     <script src="script.js" defer></script>
+    <style>
+        th,td,tr{
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 10%;
+        }
+    </style>
 </head>
 <body>
-<form>
+<form id="book-info">
     <label for="book-name">Book Name</label>
-    <input type="text" id="book-name" name="book-title"><br>
+    <input type="text" id="book-name" name="book-title" required><br>
 
     <label for="author">Author</label>
-    <input type="text" id="author" name="book-author"><br>
+    <input type="text" id="author" name="book-author" required><br>
 
     <label for="ISBN">ISBN</label>
-    <input type="text" id="ISBN" name="book-ISBN"><br>
+    <input type="text" id="ISBN" name="book-ISBN" required><br>
 
-    <input type="submit" value="add-book">
-</form>
+    <input type="submit" id="submit" value="add-book">
+</form><br>
+
+<table>
+    <thead>
+    <tr>
+        <th>Book Title</th>
+        <th>Author</th>
+        <th>ISBN</th>
+    </tr>
+    </thead>
+
+    <tbody id="book-table">
+    </tbody>
+</table>
 </body>
 </html>
