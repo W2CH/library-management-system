@@ -2,7 +2,7 @@ const books = new Map();
 
 document.addEventListener("DOMContentLoaded",function(){
 
-    const form = document.getElementById("book-info")
+    const form = document.getElementById("book-info");
 
     // TODO: Add an event listener that calls our addBook function
     form.addEventListener("submit",function(event){
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded",function(){
         var bookWasAdded = addBook();
         if(bookWasAdded){
             // Remove the book info that was passed in after adding the book.
-            form.reset()
+            form.reset();
         }
     })
 })
