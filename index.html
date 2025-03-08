@@ -5,11 +5,48 @@
     <title>library management system</title>
     <script src="script.js" defer></script>
     <style>
+
+        body{
+            background-color: #E0DCC7;
+            background-image: url("https://upload.wikimedia.org/wikipedia/en/1/1f/CSUEB.svg");
+            background-repeat: no-repeat;
+            background-position: top right;
+        }
         th,td,tr{
             border: 1px solid black;
             border-collapse: collapse;
             width: 10%;
         }
+        table{
+            position: absolute;
+            top: 20%;
+            left: 20%;
+        }
+
+        .search-book{
+            position: absolute;
+            top: 12%;
+            left: 35%
+        }
+
+        #search-label{
+            display: block;
+            margin-left: 20%;
+            margin-top: 10%;
+        }
+        #author{
+            margin-left: 31px;
+        }
+        #ISBN{
+            margin-left: 40px;
+        }
+        #search{
+            margin-left: 150px;
+        }
+        .center-elements{
+            margin-top: 10%;
+        }
+
     </style>
 </head>
 <body>
@@ -23,18 +60,23 @@
     <label for="ISBN">ISBN</label>
     <input type="text" id="ISBN" name="book-ISBN" required><br>
 
-    <input type="submit" id="submit" value="add-book">
+    <input type="submit" id="submit" value="add-book"><br>
+
+    <label id="search-label" for="find-book">What book are you looking for?</label>
+    <input class="center-elements search-book" type="search" id="find-book" name="find-book">
+    <input class="center-elements search-book" type="submit" id="search" value="find-book">
 </form><br>
 
 <p id="add-status"></p>
 
-<table>
+<table class="center-elements">
     <thead>
     <tr>
         <th>Book Title</th>
         <th>Author</th>
         <th>ISBN</th>
         <th>Quantity</th>
+        <th>Edit</th>
     </tr>
     </thead>
 

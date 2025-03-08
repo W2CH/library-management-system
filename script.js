@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded",function(){
 
 function addBook(){
 
-    // This just removes the duplicate ISBN error message.
+    // This just resets message.
     document.getElementById("add-status").innerHTML = ""
 
     // TODO: Get the values that the user passed in
@@ -51,23 +51,31 @@ function addBook(){
     // This is creating a new row element.
     const newRow = document.createElement("tr");
 
-    // This creates the data for the row we created.
+    // This creates cells for the row we created.
     const newBookTitle = document.createElement("td");
     const newAuthor = document.createElement("td");
     const newISBN = document.createElement("td");
     const bookQuantity = document.createElement("td");
+    const edit = document.createElement("td");
+
+    // Creating a edit button
+    const newEditButton = document.createElement("input");
+    newEditButton.type = "button";
+    newEditButton.value = "Edit";
 
     // Store book data to the table data elements
     newBookTitle.textContent = bookTitle;
     newAuthor.textContent = author;
     newISBN.textContent = ISBN;
     bookQuantity.textContent = "1";
+    edit.appendChild(newEditButton);
 
     // TODO: Set tr as the parent of td
     newRow.appendChild(newBookTitle);
     newRow.appendChild(newAuthor);
     newRow.appendChild(newISBN);
     newRow.appendChild(bookQuantity);
+    newRow.appendChild(edit);
 
     // TODO: Set tbody as the parent of tr
     const bookTable = document.getElementById("book-table");
@@ -80,6 +88,8 @@ function addBook(){
     books.set(ISBN, newRow);
 
     document.getElementById("add-status").innerHTML = "Book has been added!";
+    // var number = Number(document.getElementById(ISBN).cells[2].innerHTML);
+    // console.log("Value of ISBN after convert:",number);
     return true;
 }
 
