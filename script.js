@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded",function(){
 
     const form = document.getElementById("book-info");
 
-    // TODO: Add an event listener that calls our addBook function
+    // Add an event listener that calls our addBook function
     form.addEventListener("submit",function(event){
 
         // Prevents submission to a server.
@@ -20,31 +20,37 @@ document.addEventListener("DOMContentLoaded",function(){
 
 function addBook(){
 
-    // This just resets message.
+    // This just resets the add-status paragraph element.
     document.getElementById("add-status").innerHTML = ""
 
-    // TODO: Get the values that the user passed in
+    // Get the values that the user passed in
     const bookTitle = document.getElementById("book-name").value;
     const author = document.getElementById("author").value;
     var ISBN = document.getElementById("ISBN").value;
 
+    if(author.length > 100 || bookTitle.length > 100){
+        document.getElementById("add-status").innerHTML = "Book title and author name " +
+            "can have at most 100 characters.";
+        console.log("book was not added!");
+        return false;
+    }
     // Converts the x at the end of an ISBN to uppercase.
     if(ISBN[9] === "x"){
         ISBN = ISBN.replace("x", "X");
     }
-    // TODO: Figure out if the ISBN is valid
+    // Figure out if the ISBN is valid
     if(!validISBN(ISBN)){
         console.log("book was not added!");
         return false;
     }
-    // TODO Figure out if ISBN already exists and if does, check if its an invalid duplicate.
+    // Figure out if ISBN already exists and if does, check if its an invalid duplicate.
     if(books.has(ISBN) && !duplicate(ISBN, bookTitle, author)){
         console.log("book was not added!");
         document.getElementById("add-status").innerHTML = "book was not added!";
         return false;
     }
 
-    // TODO: Since this is a valid duplicate, just update quantity column.
+    // Since this is a valid duplicate, just update quantity column.
     if(books.has(ISBN)){
 
         // Get the current quantity value of this book, cast it to int, update it, cast it back to string,
@@ -56,7 +62,7 @@ function addBook(){
         return true;
     }
 
-    // TODO Append the new book to the table
+    // Append the new book to the table
 
     // This is creating a new row element.
     const newRow = document.createElement("tr");
@@ -80,21 +86,21 @@ function addBook(){
     bookQuantity.textContent = "1";
     edit.appendChild(newEditButton);
 
-    // TODO: Set tr as the parent of td
+    // Set tr as the parent of td
     newRow.appendChild(newBookTitle);
     newRow.appendChild(newAuthor);
     newRow.appendChild(newISBN);
     newRow.appendChild(bookQuantity);
     newRow.appendChild(edit);
 
-    // TODO: Set tbody as the parent of tr
+    // Set tbody as the parent of tr
     const bookTable = document.getElementById("book-table");
     bookTable.appendChild(newRow);
 
-    // TODO: Give each new row a unique id using ISBN
+    // Give each new row a unique id using ISBN
     newRow.id = ISBN;
 
-    // TODO: Store new book to our map.
+    // Store new book to our map.
     books.set(ISBN, newRow);
 
     document.getElementById("add-status").innerHTML = "Book has been added!";
