@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>library management system</title>
-    <script src="script.js" defer></script>
+    <script type="module" src="./script.js" defer></script>
     <style>
 
         body{
@@ -19,57 +19,45 @@
         }
         table{
             position: absolute;
-            top: 20%;
+            top: 30%;
             left: 20%;
         }
 
-        .search-book{
-            position: absolute;
-            top: 12%;
-            left: 35%
-        }
-
-        #search-label{
-            display: block;
-            margin-left: 20%;
-            margin-top: 10%;
-        }
-        #author{
-            margin-left: 31px;
-        }
-        #ISBN{
-            margin-left: 40px;
-        }
-        #search{
-            margin-left: 150px;
-        }
-        .center-elements{
-            margin-top: 10%;
-        }
 
     </style>
 </head>
 <body>
 <form id="book-info">
-    <label for="book-name">Book Name</label>
+    <label for="book-name">Enter Book Name</label>
     <input type="text" id="book-name" name="book-title" required><br>
 
-    <label for="author">Author</label>
+    <label for="author">Enter Author</label>
     <input type="text" id="author" name="book-author" required><br>
 
-    <label for="ISBN">ISBN</label>
+    <label for="ISBN">Enter ISBN</label>
     <input type="text" id="ISBN" name="book-ISBN" required><br>
 
     <input type="submit" id="submit" value="add-book"><br>
-
-    <label id="search-label" for="find-book">What book are you looking for?</label>
-    <input class="center-elements search-book" type="search" id="find-book" name="find-book">
-    <input class="center-elements search-book" type="submit" id="search" value="find-book">
 </form><br>
 
-<p id="add-status"></p>
+<form id="get-book">
+    <label id="book-title-search" for="find-book-title">Enter book title: </label>
+    <input type="search" id="find-book-title" name="find-book-title"><br>
 
-<table class="center-elements">
+    <label id="book-author-search" for="find-book-author">Enter book author: </label>
+    <input type="search" id="find-book-author" name="find-book-author"><br>
+
+    <label id="book-ISBN-search" for="find-book-ISBN">Enter book ISBN: </label>
+    <input type="search" id="find-book-ISBN" name="find-book-ISBN"><br>
+
+
+    <input type="submit" id="search" value="find-book">
+</form>
+
+<p id="add-status"></p><br>
+<p id="search-status"></p>
+
+<table class="center-elements" id="add-table">
     <thead>
     <tr>
         <th>Book Title</th>
