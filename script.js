@@ -34,11 +34,9 @@ document.addEventListener("DOMContentLoaded",function(){
             addingBookForm.reset();
         }
     })
-
     // Event listen that calls searchBook function from searchingBook module.
     searchingBookForm.addEventListener("submit", function(event){
         event.preventDefault();
-
         var bookFound = searchBook();
         if(bookFound){
             searchingBookForm.reset();
