@@ -1,13 +1,71 @@
-import {books} from '../script.js';
 import {validISBN} from '../validateISBN.js';
+import {addBookToTable} from '../addBookDataToTable.js'
 
 export default function searchBook(){
-
-    console.log(books);
-    // Hide the table with all the books
     document.getElementById("add-table").hidden = true;
 
-    // TODO: Create a new table.
+    // TODO: Check if the search table exists.
+    if(document.getElementById("search-table")){
+        // TODO: Each time find-book button gets hit, we need to clear the table. so delete search table.
+        const oldSearchResult = document.getElementById("search-table");
+        oldSearchResult.remove();
+    }
+
+    // TODO: Now create the table again to add the new results.
+    createATable();
+
+    // Format book title and author that was passed in
+    const authorAndTitle = formatTitleAndAuthor();
+    var bookAuthor = authorAndTitle.author
+    var bookTitle = authorAndTitle.bookTitle
+
+    // TODO: Find book using ISBN
+    const ISBN = document.getElementById("find-book-ISBN").value;
+    if(ISBN !== ""){
+        if(!validISBN(ISBN)){
+            return false;
+        }
+        // Check if the book exists
+        if(!localStorage.getItem(ISBN)){
+            document.getElementById("search-status").innerHTML = "This book does not exist.";
+            return false;
+        }
+
+        // TODO: Add book to the search result table.
+        addBookToTable("search-results", ISBN);
+        console.log("Book was found!");
+        document.getElementById("search-status").innerHTML = "Search results for " + bookTitle + ":";
+        return true;
+    }
+    // TODO: Find book using only the book title and author name. (THIS DOES NOT WORK!! LOOK INTO IT!!)
+    // 1.Iterate through each key in local storage to get the book data as a JSON
+    for(let i = 0; i < localStorage.length; i++){
+        // Get the ISBN
+        const ISBN = localStorage.key(i);
+
+        // 2.Parse book data into a map in JS
+        const stringBookInfo = localStorage.getItem(ISBN);
+        let bookInfoArray = JSON.parse(stringBookInfo);
+        let retrievedBook = new Map(bookInfoArray);
+
+        // 3. If the current book's author or bookTitle are the same as the book info
+        // the user passed in, then add that book to the search table.
+        if(retrievedBook.get("bookTitle") === bookTitle || retrievedBook.get("author") === bookAuthor){
+            addBookToTable("search-results", ISBN);
+        }
+    }
+    const searchTableRows = document.getElementById("search-results");
+    if(searchTableRows.rows.length === 0){
+        console.log("Book does not exist!");
+        document.getElementById("search-status").innerHTML = "Book does not exist!";
+        return;
+    }
+    console.log("Book was found!");
+    document.getElementById("search-status").innerHTML = "Search results for " + bookTitle + ":";
+    return false;
+}
+
+function createATable(){
     const searchTable = document.createElement("table");
     const searchTableBody = document.createElement("tbody");
     const tableHead = document.createElement("thead");
@@ -18,6 +76,7 @@ export default function searchBook(){
     const quantityColumn = document.createElement("th");
     const editColumn = document.createElement("th");
 
+    searchTable.id = "search-table";
     searchTableBody.id = "search-results";
 
     // TODO: Assigning column names
@@ -42,79 +101,18 @@ export default function searchBook(){
     initialRow.appendChild(ISBNColumn);
     initialRow.appendChild(quantityColumn);
     initialRow.appendChild(editColumn);
-
-
-    // TODO: Find book using ISBN
-    const ISBN = document.getElementById("find-book-ISBN").value;
-    if(ISBN !== ""){
-        if(!validISBN(ISBN)){
-            return false;
-        }
-        // Check if the book exists
-        if(!books.has(ISBN)){
-            document.getElementById("search-status").innerHTML = "This book does not exist.";
-            return false;
-        }
-
-        // TODO: Add book to the search result table.
-        addBook(ISBN, searchTableBody);
-        console.log("Book was added!");
-        document.getElementById("search-status").innerHTML = "Search results:";
-        return true;
-    }
-
-    // TODO: Find book using only the book title and author name. THIS DOES NOT WORK!! LOOK INTO IT!!
-    var bookTitle = document.getElementById("find-book-title");
-    var bookAuthor = document.getElementById("find-book-author");
-
-    for(const book of books.values()){
-        if(book.get("author") === bookAuthor || book.get("bookTitle") === bookTitle){
-            // TODO: Add book to the search result table.
-            addBook(ISBN, searchTableBody);
-            document.getElementById("search-status").innerHTML = "Search results:";
-            console.log("Search results:");
-            return true;
-        }
-    }
-    console.log("Book does not exist!");
-    document.getElementById("search-status").innerHTML = "Book does not exist!";
-    return false;
 }
 
-function addBook(ISBN, searchTableBody){
-    // This is creating a new row element.
-    const newRow = document.createElement("tr");
+function formatTitleAndAuthor(){
+    var bookTitle = document.getElementById("find-book-title").value;
+    var author = document.getElementById("find-book-author").value;
 
-    // This creates cells for the row we created.
-    const bookTitle = document.createElement("td");
-    const author = document.createElement("td");
-    const tdISBN = document.createElement("td");
-    const bookQuantity = document.createElement("td");
-    const edit = document.createElement("td");
+    // Remove all white spaces
+    bookTitle = bookTitle.replace(" ", "");
+    author = author.replace(" ", "");
 
-    // Creating a edit button
-    const newEditButton = document.createElement("input");
-    newEditButton.type = "button";
-    newEditButton.value = "Edit";
-
-    // Store book data to the table data elements
-    bookTitle.textContent = books.get(ISBN).get("bookTitle");
-    author.textContent = books.get(ISBN).get("author");
-    tdISBN.textContent = ISBN;
-    bookQuantity.textContent = books.get(ISBN).get("quantity");
-    edit.appendChild(newEditButton);
-
-    console.log(books.get(ISBN).get("bookTitle"));
-    console.log(books.get(ISBN).get("author"));
-    console.log(ISBN);
-    console.log(books.get(ISBN).get("quantity"));
-
-    // Set table row as the parent of all table data
-    newRow.appendChild(bookTitle);
-    newRow.appendChild(author);
-    newRow.appendChild(tdISBN);
-    newRow.appendChild(bookQuantity);
-    newRow.appendChild(edit);
-
-    searchTableBody.appendChild(newRow);
+    // Lowercase both strings
+    bookTitle = bookTitle.toLowerCase();
+    author = author.toLowerCase();
+    return {bookTitle, author};
 }

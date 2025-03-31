@@ -1,5 +1,5 @@
-import {books} from '../script.js';
 import {validISBN} from '../validateISBN.js';
+import {addBookToTable} from '../addBookDataToTable.js';
 
 export default function addBook(){
 
@@ -24,75 +24,51 @@ export default function addBook(){
         console.log("book was not added!");
         return false;
     }
-    // Figure out if ISBN already exists and if does, check if its an invalid duplicate.
-    if(books.has(ISBN) && !duplicate(ISBN, bookTitle, author)){
-        console.log("book was not added!");
+    // Figure out if ISBN already exists and if it does, check if it's an invalid duplicate.
+    if(localStorage.getItem(ISBN) && !duplicate(ISBN, bookTitle, author)){
+        console.log("The ISBN exists but the info that was passed is wrong!");
         document.getElementById("add-status").innerHTML = "book was not added!";
         return false;
     }
 
     // Since this is a valid duplicate, just update quantity column.
-    if(books.has(ISBN)){
-
+    if(localStorage.getItem(ISBN) !== null){
         // Get the current quantity value of this book, cast it to int, update it, cast it back to string,
         // and update the quantity column in the table.
         var currentQuantity = Number(document.getElementById(ISBN).cells[3].innerHTML)
         currentQuantity++;
         document.getElementById(ISBN).cells[3].innerHTML = currentQuantity.toString();
-        currentQuantity = books.get(ISBN).get("quantity");
 
-        // Updates quantity value in the map
-        books.get(ISBN).set("quantity", currentQuantity+1);
+        // Updates quantity value in local storage
+        // Get the book data from local storage
+        let stringBookInfo = localStorage.getItem(ISBN);
+        let bookInfoArray = JSON.parse(stringBookInfo);
+        let retrievedBook = new Map(bookInfoArray);
+
+        // This is updating the book quantity value
+        currentQuantity = retrievedBook.get("quantity");
+        retrievedBook.set("quantity", currentQuantity + 1);
+
+        // Marshall map back to JSON
+        let saveNewBookQuantity = Array.from(retrievedBook.entries());
+        localStorage.setItem(ISBN, JSON.stringify(saveNewBookQuantity));
         document.getElementById("add-status").innerHTML = "Book has been added!";
-        console.log(books);
         return true;
     }
 
-    // Append the new book to the table
-
-    // This is creating a new row element.
-    const newRow = document.createElement("tr");
-
-    // This creates cells for the row we created.
-    const newBookTitle = document.createElement("td");
-    const newAuthor = document.createElement("td");
-    const newISBN = document.createElement("td");
-    const bookQuantity = document.createElement("td");
-    const edit = document.createElement("td");
-
-    // Creating a edit button
-    const newEditButton = document.createElement("input");
-    newEditButton.type = "button";
-    newEditButton.value = "Edit";
-
-    // Store book data to the table data elements
-    newBookTitle.textContent = document.getElementById("book-name").value;
-    newAuthor.textContent = document.getElementById("author").value;
-    newISBN.textContent = ISBN;
-    bookQuantity.textContent = "1";
-    edit.appendChild(newEditButton);
-
-    // Set tr as the parent of td
-    newRow.appendChild(newBookTitle);
-    newRow.appendChild(newAuthor);
-    newRow.appendChild(newISBN);
-    newRow.appendChild(bookQuantity);
-    newRow.appendChild(edit);
-
-    // Set tbody as the parent of tr
-    const bookTable = document.getElementById("book-table");
-    bookTable.appendChild(newRow);
-
-    // Give each new row a unique id using ISBN
-    newRow.id = ISBN;
-
-    // Store new book to our map.
+    // Store new book to a map and store map data in local storage
     var book = new Map();
     book.set("author", author);
     book.set("bookTitle", bookTitle);
     book.set("ISBN", ISBN);
     book.set("quantity", 1);
-    books.set(ISBN, book);
+    book.set("userAuthorInput", document.getElementById("author").value);
+    book.set("userBookTitleInput", document.getElementById("book-name").value);
+    var newBook = Array.from(book.entries());
+    localStorage.setItem(ISBN, JSON.stringify(newBook));
+
+    // TODO: Append the new book to the table
+    addBookToTable("book-table", ISBN);
 
     document.getElementById("add-status").innerHTML = "Book has been added!";
     // var number = Number(document.getElementById(ISBN).cells[2].innerHTML);
@@ -101,9 +77,15 @@ export default function addBook(){
 }
 
 function duplicate(ISBN, bookTitle, author){
+
+    // Parse JSON back to a map
+    let stringBookInfo = localStorage.getItem(ISBN);
+    let bookInfoArray = JSON.parse(stringBookInfo);
+    let retrievedBook = new Map(bookInfoArray);
+
     // Grab the existing book's information with the existing ISBN
-    var existingBookTitle = books.get(ISBN).get("bookTitle");
-    var existingAuthor = books.get(ISBN).get("author");
+    let existingBookTitle = retrievedBook.get("bookTitle");
+    let existingAuthor = retrievedBook.get("author");
 
     // Check if the author and title of new book match the existing book
     if(author !== existingAuthor && bookTitle !== existingBookTitle){
