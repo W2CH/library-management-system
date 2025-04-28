@@ -1,5 +1,5 @@
-import {validISBN} from '../validateISBN.js';
-import {addBookToTable} from '../addBookDataToTable.js';
+import {validISBN} from '../../validateISBN.js';
+import {addBookToTable} from '../../addBookDataToTable.js';
 
 export default function addBook(){
 
