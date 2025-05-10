@@ -2,7 +2,6 @@ import {validISBN} from '../validateISBN.js';
 import {addBookToTable} from '../addBookDataToTable.js'
 
 export default function searchBook(){
-    document.getElementById("add-table").hidden = true;
 
     // TODO: Check if the search table exists.
     if(document.getElementById("search-table")){
@@ -37,7 +36,7 @@ export default function searchBook(){
         document.getElementById("search-status").innerHTML = "Search results for " + bookTitle + ":";
         return true;
     }
-    // TODO: Find book using only the book title and author name. (THIS DOES NOT WORK!! LOOK INTO IT!!)
+    // TODO: Find book using only the book title and author name.
     // 1.Iterate through each key in local storage to get the book data as a JSON
     for(let i = 0; i < localStorage.length; i++){
         // Get the ISBN
@@ -58,7 +57,7 @@ export default function searchBook(){
     if(searchTableRows.rows.length === 0){
         console.log("Book does not exist!");
         document.getElementById("search-status").innerHTML = "Book does not exist!";
-        return;
+        return true;
     }
     console.log("Book was found!");
     document.getElementById("search-status").innerHTML = "Search results for " + bookTitle + ":";
@@ -74,7 +73,6 @@ function createATable(){
     const authorColumn = document.createElement("th");
     const ISBNColumn = document.createElement("th");
     const quantityColumn = document.createElement("th");
-    const editColumn = document.createElement("th");
 
     searchTable.id = "search-table";
     searchTableBody.id = "search-results";
@@ -84,7 +82,6 @@ function createATable(){
     authorColumn.textContent = "Author";
     ISBNColumn.textContent = "ISBN";
     quantityColumn.textContent = "Quantity";
-    editColumn.textContent = "Edit";
 
     document.body.appendChild(searchTable);
 
@@ -100,7 +97,9 @@ function createATable(){
     initialRow.appendChild(authorColumn);
     initialRow.appendChild(ISBNColumn);
     initialRow.appendChild(quantityColumn);
-    initialRow.appendChild(editColumn);
+
+    // put search table in search div
+    document.getElementById("search-view").appendChild(searchTable);
 }
 
 function formatTitleAndAuthor(){

@@ -70,7 +70,6 @@ export default function addBook(){
     // TODO: Append the new book to the table
     addBookToTable("book-table", ISBN);
 
-    document.getElementById("add-status").innerHTML = "Book has been added!";
     // var number = Number(document.getElementById(ISBN).cells[2].innerHTML);
     // console.log("Value of ISBN after convert:",number);
     return true;

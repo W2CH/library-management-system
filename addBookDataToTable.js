@@ -12,26 +12,31 @@ export function addBookToTable(tableBody,ISBN){
     const newAuthor = document.createElement("td");
     const newISBN = document.createElement("td");
     const bookQuantity = document.createElement("td");
-    const edit = document.createElement("td");
 
-    // Creating a edit button
-    const newEditButton = document.createElement("input");
-    newEditButton.type = "button";
-    newEditButton.value = "Edit";
 
     // TODO: Store book data to the table data elements using data retrieved from local storage
     newBookTitle.textContent = retrievedBook.get("userBookTitleInput");
     newAuthor.textContent = retrievedBook.get("userAuthorInput");
     newISBN.textContent = ISBN;
     bookQuantity.textContent = retrievedBook.get("quantity");
-    edit.appendChild(newEditButton);
 
     // Set tr as the parent of td
     newRow.appendChild(newBookTitle);
     newRow.appendChild(newAuthor);
     newRow.appendChild(newISBN);
     newRow.appendChild(bookQuantity);
-    newRow.appendChild(edit);
+
+    if(tableBody !== "search-results"){
+        const edit = document.createElement("td");
+        // Creating a edit button
+        const newEditButton = document.createElement("input");
+        newEditButton.type = "button";
+        newEditButton.value = "Edit";
+        newEditButton.classList.add("edit-button");      // Add a class to the button
+        newEditButton.dataset.isbn = ISBN;
+        edit.appendChild(newEditButton);
+        newRow.appendChild(edit);
+    }
 
     // Set tbody as the parent of tr
     const bookTable = document.getElementById(tableBody);
